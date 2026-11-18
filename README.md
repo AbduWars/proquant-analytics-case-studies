@@ -1,6 +1,6 @@
 # ProQuant Analytics — Public Data Case Studies
 
-A public-facing showcase for the current 12-service catalogue. It is separate from the private template repository.
+A public-facing source-and-method catalogue for the current 12-service catalogue. It is separate from the private template repository.
 
 ## Honest-use statement
 
