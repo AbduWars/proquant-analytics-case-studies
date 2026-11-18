@@ -1,0 +1,5 @@
+tenor_proxy,equal_weight,min_variance_train
+bond_2y_proxy_return,0.25,1
+bond_5y_proxy_return,0.25,0
+bond_10y_proxy_return,0.25,9.3675068e-17
+bond_30y_proxy_return,0.25,1.8214596e-17

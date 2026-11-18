@@ -1,0 +1,12 @@
+{
+  "contracts": 6,
+  "latest_report_date": "2026-11-10",
+  "series_included": [
+    "E-MINI S&P 500",
+    "S&P 500 Consolidated",
+    "UST 10Y NOTE",
+    "UST 2Y NOTE",
+    "UST 5Y NOTE",
+    "UST BOND"
+  ]
+}

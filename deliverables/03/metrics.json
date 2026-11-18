@@ -1,0 +1,10 @@
+{
+  "train_observations": 876,
+  "test_observations": 714,
+  "train_through": "2023-12-29",
+  "test_from": "2024-01-02",
+  "oos_mae_bp": 5.1037896212086205,
+  "mean_baseline_mae_bp": 5.088772495299489,
+  "oos_direction_hit_pct": 50.14005602240896,
+  "interpretation": "forecast diagnostic only; not a tradable strategy or realized return"
+}

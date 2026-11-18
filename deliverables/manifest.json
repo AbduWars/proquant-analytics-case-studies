@@ -1,0 +1,81 @@
+{
+  "built_utc": "2026-11-18T10:08:17+00:00",
+  "source_period": "2020 through latest available source observations",
+  "studies": [
+    {
+      "id": "01",
+      "title": "Market & Macro Monitor",
+      "report": "deliverables/01/index.html",
+      "metrics": "deliverables/01/metrics.json"
+    },
+    {
+      "id": "02",
+      "title": "Quantitative Company Analysis",
+      "report": "deliverables/02/index.html",
+      "metrics": "deliverables/02/metrics.json"
+    },
+    {
+      "id": "03",
+      "title": "Strategy Research & Backtesting",
+      "report": "deliverables/03/index.html",
+      "metrics": "deliverables/03/metrics.json"
+    },
+    {
+      "id": "04",
+      "title": "Portfolio Construction & Allocation",
+      "report": "deliverables/04/index.html",
+      "metrics": "deliverables/04/metrics.json"
+    },
+    {
+      "id": "05",
+      "title": "Positions, Leverage & Carry",
+      "report": "deliverables/05/index.html",
+      "metrics": "deliverables/05/metrics.json"
+    },
+    {
+      "id": "06",
+      "title": "Portfolio Risk & What-if Analysis",
+      "report": "deliverables/06/index.html",
+      "metrics": "deliverables/06/metrics.json"
+    },
+    {
+      "id": "07",
+      "title": "Execution Costs & Slippage",
+      "report": "deliverables/07/index.html",
+      "metrics": "deliverables/07/metrics.json"
+    },
+    {
+      "id": "08",
+      "title": "Performance & Investor Reporting",
+      "report": "deliverables/08/index.html",
+      "metrics": "deliverables/08/metrics.json"
+    },
+    {
+      "id": "09",
+      "title": "Model Validation",
+      "report": "deliverables/09/index.html",
+      "metrics": "deliverables/09/metrics.json"
+    },
+    {
+      "id": "10",
+      "title": "Derivatives & Pricing",
+      "report": "deliverables/10/index.html",
+      "metrics": "deliverables/10/metrics.json"
+    },
+    {
+      "id": "11",
+      "title": "Market Data Platform & Reconciliation",
+      "report": "deliverables/11/index.html",
+      "metrics": "deliverables/11/metrics.json"
+    },
+    {
+      "id": "12",
+      "title": "AI-assisted Quantitative Research",
+      "report": "deliverables/12/index.html",
+      "metrics": "deliverables/12/metrics.json"
+    }
+  ],
+  "workbook": "deliverables/ProQuant_Public_Studies.xlsx",
+  "raw_source_files_published": false,
+  "client_data_used": false
+}

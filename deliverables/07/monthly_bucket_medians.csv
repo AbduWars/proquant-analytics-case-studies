@@ -1,0 +1,5 @@
+month,Sp500,category_rows,median_effective_spread_reported,median_quoted_spread_reported,median_weighted_price_improvement_reported,median_execution_time_reported,median_fill_at_quote_or_better
+202609,N,9,0.012785,0.006929,0.001382,4674.0677,0.678364
+202609,Y,9,0.004864,0.008295,0.002508,5.360686,0.625
+202610,N,9,0.003325,0.004081,0.000736,1733.5671,0.760871
+202610,Y,9,-0.000378,0.005682,0.001908,4.932621,0.832411

@@ -1,0 +1,19 @@
+{
+  "portfolio_weights": {
+    "bond_2y_proxy_return": 0.0,
+    "bond_5y_proxy_return": 0.2,
+    "bond_10y_proxy_return": 0.6,
+    "bond_30y_proxy_return": 0.2
+  },
+  "observations": 1719,
+  "daily_historical_var_95_pct": 0.9899999999999985,
+  "daily_historical_es_95_pct": 1.3651162790697673,
+  "historical_worst_day_pct": -3.0699999999999994,
+  "hypothetical_parallel_plus_100bp_loss_pct": -11.0,
+  "assumed_duration_years": {
+    "bond_2y_proxy_return": 2,
+    "bond_5y_proxy_return": 5,
+    "bond_10y_proxy_return": 10,
+    "bond_30y_proxy_return": 20
+  }
+}

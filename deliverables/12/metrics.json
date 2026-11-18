@@ -1,0 +1,9 @@
+{
+  "evidence_rows": 3,
+  "issuer_coverage": [
+    "AAPL",
+    "MSFT",
+    "NVDA"
+  ],
+  "method": "XBRL extraction, filed-date preservation, calculations, evidence ledger; no LLM generation"
+}

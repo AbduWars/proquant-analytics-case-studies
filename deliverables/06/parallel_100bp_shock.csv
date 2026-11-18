@@ -1,0 +1,5 @@
+tenor_years,weight,assumed_duration_years,loss_pct_parallel_plus_100bp
+2,0,2,-0
+5,0.2,5,-1
+10,0.6,10,-6
+20,0.2,20,-4

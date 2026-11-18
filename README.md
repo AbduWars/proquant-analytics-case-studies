@@ -1,32 +1,54 @@
-# ProQuant Analytics — Public Data Case Studies
+# ProQuant Analytics — Public-Data Studies
 
-A public-facing source-and-method catalogue for the current 12-service catalogue. It is separate from the private template repository.
+A reproducible public portfolio of 12 quantitative studies. These are public-data analyses, **not client engagements**. Source data remain in a local `.cache/` folder and are excluded from Git; selected derived results and report files are included.
 
-## Honest-use statement
+## Browse and download
 
-Every item here is a **public-data study plan or analytical demonstrator**, not a client engagement. We do not claim fictional briefs as real clients. No client data, client names, credentials, internal prompts, manuals, or private template code are included.
+- [Interactive study gallery](index.html)
+- [Combined results workbook](deliverables/ProQuant_Public_Studies.xlsx)
+- [Complete study-pack ZIP](deliverables/ProQuant_Public_Studies.zip)
+- [Per-study result pages](deliverables/)
+- [Data source rights and caveats](DATA_SOURCES.md)
 
-**Important status:** the first release documents source choices, analysis boundaries, and validation state for all 12 services. It does **not** claim twelve completed real-data reports. Each study page says what is ready and what remains. The site will only be promoted as twelve completed studies after each computation, source-rights review, output, and reproducibility check is complete.
+## Rebuild
 
-## Browse
+```bash
+python -m venv .venv && . .venv/bin/activate
+pip install -r requirements.txt
+python scripts/download_public_data.py
+python scripts/build_studies.py
+python scripts/build_gallery.py
+pytest -q
+```
 
-Open [the showcase](index.html) or individual notes in [`studies/`](studies/).
+Raw downloads are saved under `.cache/` and ignored by Git. The generated deliverables are built from the exact source endpoints in each report. Re-running refreshes the source data, so later results may differ.
 
-## Sources and reuse
+## Study map
 
-- [SEC Developer Resources](https://www.sec.gov/about/developer-resources): SEC submissions and extracted XBRL are available through REST APIs; comply with SEC fair-access requirements (no more than 10 requests/second; descriptive User-Agent). This repository links to SEC data and does not mirror source files.
-- [U.S. Treasury Daily Interest Rate Data](https://home.treasury.gov/treasury-daily-interest-rate-xml-feed): official daily rate feeds and downloadable data. The showcase links to the source and does not redistribute its bulk dataset.
-- [CFTC Commitments of Traders](https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm): public aggregate position categories. They are not individual trader records; source definitions and caveats must accompany analysis.
-- [FRED terms](https://fred.stlouisfed.org/legal/terms/): FRED data may be third-party-owned; do not republish or commercially reuse a series without checking its series-level rights and obtaining permission when required. FRED material is therefore not copied here.
+| # | Study | Data and key scope |
+|---|---|---|
+| 01 | [Market & Macro Monitor](studies/01.md) | Computed from public source data |
+| 02 | [Quantitative Company Analysis](studies/02.md) | Computed from public source data |
+| 03 | [Strategy Research & Backtesting](studies/03.md) | Computed from public source data |
+| 04 | [Portfolio Construction & Allocation](studies/04.md) | Computed with stated hypothetical inputs |
+| 05 | [Positions, Leverage & Carry](studies/05.md) | Computed from public source data |
+| 06 | [Portfolio Risk & What-if Analysis](studies/06.md) | Computed with stated hypothetical inputs |
+| 07 | [Execution Costs & Slippage](studies/07.md) | Computed from public market-center summaries |
+| 08 | [Performance & Investor Reporting](studies/08.md) | Computed with stated hypothetical inputs |
+| 09 | [Quantitative Model Validation](studies/09.md) | Computed from public source data |
+| 10 | [Derivatives & Pricing](studies/10.md) | Computed with stated hypothetical inputs |
+| 11 | [Market Data Platform & Reconciliation](studies/11.md) | Computed from public source data |
+| 12 | [AI-assisted Quantitative Research](studies/12.md) | Computed evidence workflow; no LLM |
 
-## Publication standard
+## Source attribution and reuse
 
-A study may be marked complete only when it has: source and applicable reuse terms, dated input provenance, executed calculations, checked output files, explicit limitations, and an independent reproducibility review. Synthetic assumptions must always be labeled synthetic.
+- **U.S. Treasury:** [daily yield curve XML feed](https://home.treasury.gov/treasury-daily-interest-rate-xml-feed); outputs are cited derived analyses, not bulk raw copies.
+- **SEC:** [EDGAR Company Facts API](https://www.sec.gov/edgar/sec-api-documentation). SEC states information presented on sec.gov may be copied or further distributed with appropriate citation; automated downloads must follow fair-access rules, including the 10 requests/second ceiling and a descriptive User-Agent.
+- **CFTC:** [TFF futures-only dataset](https://publicreporting.cftc.gov/Commitments-of-Traders/TFF-Futures-Only/gpe5-46if). CFTC identifies government information on its site as public domain. This study retains selected aggregate contract-category observations only.
+- **Cboe:** [BZX Rule 605 reports](https://www.cboe.com/markets/us/equities/regulation/605/bzx). Only grouped medians are published; the source warns that reports are unaudited and may not be directly comparable.
 
-## Services
+## What the figures mean
 
-01 Market & Macro Monitor · 02 Quantitative Company Analysis · 03 Strategy Research & Backtesting · 04 Portfolio Construction & Allocation · 05 Positions, Leverage & Carry · 06 Portfolio Risk & What-if Analysis · 07 Execution Costs & Slippage · 08 Performance & Investor Reporting · 09 Model Validation · 10 Derivatives & Pricing · 11 Market Data Platform & Reconciliation · 12 AI-assisted Quantitative Research
+Treasury yields are indicative par yields, not bond total returns. Portfolio and option examples use explicitly stated hypothetical inputs. The forecast studies test changes in a yield-curve statistic, not market returns or a trading strategy. The execution study uses a market-center summary, not client order-level fills. No client, private dataset, credential, template source, or internal manual is included.
 
-## Disclaimer
-
-Research and measurement only. Nothing here is investment advice, a recommendation, an offer, or an executable quote. Public information may be incomplete, revised, delayed, or subject to source-specific terms.
+The figures are research demonstrations, not investment advice, trade instructions, executable quotes, or suitability assessments.

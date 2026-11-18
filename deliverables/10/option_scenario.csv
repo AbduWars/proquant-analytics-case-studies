@@ -1,0 +1,2 @@
+data_date,treasury_3m_rate_pct,contract,spot,strike,tenor_years,volatility_pct,dividend_yield_pct,model_price,delta,gamma,vega_per_1vol_point,assumptions_are_hypothetical_except_rate
+2026-11-17,4.33,hypothetical European call,100,100,0.25,25,0,5.5135875,0.55926264,0.031562594,0.19726621,True

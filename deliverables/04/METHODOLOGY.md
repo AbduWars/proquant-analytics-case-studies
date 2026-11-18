@@ -1,0 +1,46 @@
+# 04 · Portfolio Construction & Allocation
+
+**Status:** Completed out-of-sample allocation comparison using observed Treasury yield changes and explicit hypothetical duration-only bond proxies.
+
+**Summary:** {
+  "weights": {
+    "equal_weight": {
+      "bond_2y_proxy_return": 0.25,
+      "bond_5y_proxy_return": 0.25,
+      "bond_10y_proxy_return": 0.25,
+      "bond_30y_proxy_return": 0.25
+    },
+    "min_variance_train_2020_2023": {
+      "bond_2y_proxy_return": 1.0,
+      "bond_5y_proxy_return": 0.0,
+      "bond_10y_proxy_return": 9.367506770274758e-17,
+      "bond_30y_proxy_return": 1.8214596497756474e-17
+    }
+  },
+  "equal_weight_oos": {
+    "observations": 719,
+    "annualized_return_pct": -4.293784086268082,
+    "annualized_volatility_pct": 7.060546815707375,
+    "max_drawdown_pct": -14.741035393642022
+  },
+  "min_variance_oos": {
+    "observations": 719,
+    "annualized_return_pct": -0.41442112537456444,
+    "annualized_volatility_pct": 1.7745463178575949,
+    "max_drawdown_pct": -3.0411777957492725
+  },
+  "optimizer_success": true,
+  "optimizer_message": "Optimization terminated successfully",
+  "train_end": "2023-12-31",
+  "test_start": "2024-01-01",
+  "construction": "duration-only zero-coupon proxies"
+}
+
+**Method:** Approximate daily return as negative assumed duration times the daily change in corresponding par yield. Optimize long-only minimum variance on 2020–2023, compare with equal weight in 2024–latest.
+
+**Source:** https://home.treasury.gov/treasury-daily-interest-rate-xml-feed
+
+**Limitations:**
+- Hypothetical zero-coupon-like exposures; not actual bonds or ETFs.
+- Duration-only approximation excludes coupon carry, convexity, roll-down, financing, transaction costs and rebalancing costs.
+- Historical test is not a forecast or investment recommendation.

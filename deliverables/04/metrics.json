@@ -1,0 +1,33 @@
+{
+  "weights": {
+    "equal_weight": {
+      "bond_2y_proxy_return": 0.25,
+      "bond_5y_proxy_return": 0.25,
+      "bond_10y_proxy_return": 0.25,
+      "bond_30y_proxy_return": 0.25
+    },
+    "min_variance_train_2020_2023": {
+      "bond_2y_proxy_return": 1.0,
+      "bond_5y_proxy_return": 0.0,
+      "bond_10y_proxy_return": 9.367506770274758e-17,
+      "bond_30y_proxy_return": 1.8214596497756474e-17
+    }
+  },
+  "equal_weight_oos": {
+    "observations": 719,
+    "annualized_return_pct": -4.293784086268082,
+    "annualized_volatility_pct": 7.060546815707375,
+    "max_drawdown_pct": -14.741035393642022
+  },
+  "min_variance_oos": {
+    "observations": 719,
+    "annualized_return_pct": -0.41442112537456444,
+    "annualized_volatility_pct": 1.7745463178575949,
+    "max_drawdown_pct": -3.0411777957492725
+  },
+  "optimizer_success": true,
+  "optimizer_message": "Optimization terminated successfully",
+  "train_end": "2023-12-31",
+  "test_start": "2024-01-01",
+  "construction": "duration-only zero-coupon proxies"
+}

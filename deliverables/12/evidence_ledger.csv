@@ -1,0 +1,4 @@
+claim,issuer,ticker,fiscal_year,revenue_usd,filed_date,source_url
+latest annual revenue in extracted SEC 10-K facts,MICROSOFT CORP,MSFT,2026,3.31839e+11,2026-07-29,https://data.sec.gov/api/xbrl/companyfacts/CIK0000789019.json
+latest annual revenue in extracted SEC 10-K facts,Apple Inc.,AAPL,2026,4.78834e+11,2026-11-03,https://data.sec.gov/api/xbrl/companyfacts/CIK0000320193.json
+latest annual revenue in extracted SEC 10-K facts,NVIDIA CORP,NVDA,2026,2.15938e+11,2026-02-25,https://data.sec.gov/api/xbrl/companyfacts/CIK0001045810.json

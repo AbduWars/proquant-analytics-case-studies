@@ -1,0 +1,15 @@
+{
+  "data_date": "2026-11-17",
+  "treasury_3m_rate_pct": 4.33,
+  "contract": "hypothetical European call",
+  "spot": 100.0,
+  "strike": 100.0,
+  "tenor_years": 0.25,
+  "volatility_pct": 25.0,
+  "dividend_yield_pct": 0.0,
+  "model_price": 5.5135874731291565,
+  "delta": 0.5592626370546617,
+  "gamma": 0.03156259435413999,
+  "vega_per_1vol_point": 0.19726621471337494,
+  "assumptions_are_hypothetical_except_rate": true
+}

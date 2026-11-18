@@ -1,0 +1,22 @@
+# 01 · Market & Macro Monitor
+
+**Status:** Completed descriptive analysis of official daily yield observations.
+
+**Summary:** {
+  "source_rows": 1720,
+  "first_date": "2020-01-02",
+  "last_date": "2026-11-17",
+  "median_10y_2y_slope_pct_points": 0.36999999999999983,
+  "inverted_curve_observations": 541,
+  "inverted_curve_share_pct": 31.453488372093023,
+  "max_10y_2y_slope_pct_points": 1.5899999999999999,
+  "min_10y_2y_slope_pct_points": -1.0800000000000005
+}
+
+**Method:** Parse Treasury XML and calculate daily constant-maturity curve slopes; report distribution, coverage and inversion share.
+
+**Source:** https://home.treasury.gov/treasury-daily-interest-rate-xml-feed
+
+**Limitations:**
+- Par yields are indicative curve estimates, not realized bond total returns.
+- No macro causal claim or yield forecast is made.

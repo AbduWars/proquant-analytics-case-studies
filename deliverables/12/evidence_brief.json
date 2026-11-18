@@ -1,0 +1,38 @@
+{
+  "purpose": "Demonstrate deterministic evidence-linked public-market research; no LLM was used.",
+  "records": [
+    {
+      "claim": "latest annual revenue in extracted SEC 10-K facts",
+      "issuer": "MICROSOFT CORP",
+      "ticker": "MSFT",
+      "fiscal_year": 2026,
+      "revenue_usd": 331839000000.0,
+      "filed_date": "2026-07-29",
+      "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000789019.json"
+    },
+    {
+      "claim": "latest annual revenue in extracted SEC 10-K facts",
+      "issuer": "Apple Inc.",
+      "ticker": "AAPL",
+      "fiscal_year": 2026,
+      "revenue_usd": 478834000000.0,
+      "filed_date": "2026-11-03",
+      "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000320193.json"
+    },
+    {
+      "claim": "latest annual revenue in extracted SEC 10-K facts",
+      "issuer": "NVIDIA CORP",
+      "ticker": "NVDA",
+      "fiscal_year": 2026,
+      "revenue_usd": 215938000000.0,
+      "filed_date": "2026-02-25",
+      "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001045810.json"
+    }
+  ],
+  "review_controls": [
+    "source URL retained per issuer",
+    "fiscal year and filed date retained",
+    "do not infer causality from reported fundamentals",
+    "human review required before client use"
+  ]
+}

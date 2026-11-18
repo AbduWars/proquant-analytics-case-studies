@@ -1,0 +1,4 @@
+source,rows,key_duplicates,date_min,date_max,missing_10y_pct,missing_revenue_pct,missing_open_interest_pct
+U.S. Treasury,1720,0,2020-01-02,2026-11-17,0,,
+SEC Company Facts,21,0,2020,2026,,0,
+CFTC TFF API,47420,0,2006-06-13,2026-11-10,,,0

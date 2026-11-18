@@ -1,0 +1,10 @@
+ticker,metric,value
+MSFT,revenue,3.31839e+11
+AAPL,revenue,4.78834e+11
+NVDA,revenue,2.15938e+11
+MSFT,operating_margin_pct,46.780818
+AAPL,operating_margin_pct,33.009978
+NVDA,operating_margin_pct,60.381684
+MSFT,net_margin_pct,40.305389
+AAPL,net_margin_pct,27.603512
+NVDA,net_margin_pct,55.602534
