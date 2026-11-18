@@ -192,6 +192,80 @@ def plot_lines(study: str, title: str, df: pd.DataFrame, columns, ylabel: str, n
     return path
 
 
+PALETTE = ["#174db7", "#f08a24", "#1a9e77", "#c2410c", "#7c3aed", "#0891b2"]
+ABBREV = {"pct": "%", "bp": "(bp)", "oos": "out-of-sample", "mae": "MAE", "rmse": "RMSE", "var": "VaR",
+          "es": "ES", "usd": "(USD)", "yoy": "YoY", "10y": "10y", "2y": "2y", "3m": "3-month", "sec": "SEC"}
+
+
+def label(key: str) -> str:
+    """Turn a metrics key into a readable label: oos_mae_bp -> Out-of-sample MAE (bp)."""
+    words = [ABBREV.get(w, w) for w in str(key).split("_")]
+    text = " ".join(words).replace(" %", " (%)")
+    return text[:1].upper() + text[1:]
+
+
+def fmt(value) -> str:
+    """Display a metric value: rounded numbers, thousands separators, Yes/No for flags."""
+    if isinstance(value, bool):
+        return "Yes" if value else "No"
+    if isinstance(value, (int, np.integer)):
+        return f"{int(value):,}"
+    if isinstance(value, (float, np.floating)):
+        if not math.isfinite(value):
+            return "n/a"
+        if abs(value) >= 1e9:
+            return f"{value / 1e9:,.1f} bn"
+        if abs(value) >= 1000:
+            return f"{value:,.0f}"
+        return f"{value:,.4f}" if abs(value) < 0.01 and value != 0 else f"{value:,.2f}"
+    if value is None:
+        return "n/a"
+    if isinstance(value, list) and all(not isinstance(x, (dict, list)) for x in value):
+        return ", ".join(fmt(x) for x in value)
+    return str(value)
+
+
+def flat_rows(summary: dict, prefix: str = "") -> list[tuple[str, str]]:
+    """Flatten one level of nested metrics into (label, value) rows; tables of records are skipped."""
+    rows = []
+    for key, value in summary.items():
+        name = f"{prefix}{label(key)}"
+        if isinstance(value, dict):
+            rows += flat_rows(value, prefix=f"{name} · ")
+        elif isinstance(value, list) and value and isinstance(value[0], dict):
+            continue
+        else:
+            rows.append((name, fmt(value)))
+    return rows
+
+
+def record_tables(summary: dict) -> list[tuple[str, pd.DataFrame]]:
+    """Lists of records inside the metrics (e.g. grouped medians) shown as their own tables."""
+    out = []
+    for key, value in summary.items():
+        if isinstance(value, list) and value and isinstance(value[0], dict):
+            df = pd.DataFrame(value)
+            out.append((label(key), df.map(fmt).rename(columns=label)))
+    return out
+
+
+def plot_bars(study: str, title: str, labels, values, ylabel: str, name: str, colors=None, annotate="{:.2f}"):
+    path = OUT / study / name
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig, ax = plt.subplots(figsize=(10, 4.8), constrained_layout=True)
+    bars = ax.bar([str(x) for x in labels], values, color=colors or PALETTE[: len(values)])
+    for bar, v in zip(bars, values):
+        ax.annotate(annotate.format(v), (bar.get_x() + bar.get_width() / 2, bar.get_height()),
+                    ha="center", va="bottom", fontsize=10, xytext=(0, 3), textcoords="offset points")
+    ax.set_title(title, loc="left", weight="bold")
+    ax.set_ylabel(ylabel)
+    ax.grid(axis="y", alpha=.22)
+    ax.spines[["top", "right"]].set_visible(False)
+    fig.savefig(path, dpi=150)
+    plt.close(fig)
+    return path
+
+
 def returns_metrics(r: pd.Series) -> dict:
     x = r.dropna()
     if not len(x):
@@ -213,10 +287,15 @@ def write_study(study: str, status: str, summary: dict, method: str, source: str
     caveat_html = "".join(f"<li>{x}</li>" for x in caveats)
     files_html = "".join(f'<li><a href="{Path(x).name}">{Path(x).name}</a></li>' for x in data_files)
     chart_html = f'<img class="chart" src="{chart}" alt="Study chart">' if chart else ""
-    rows = "".join(f"<tr><th>{k.replace('_',' ')}</th><td>{html_escape(v)}</td></tr>" for k, v in summary.items() if not isinstance(v, (dict, list)))
-    doc = f'''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>{study} · {html_escape(STUDIES[study])}</title><style>body{{font:16px/1.6 system-ui,sans-serif;max-width:940px;margin:40px auto;padding:0 22px;color:#14243a;background:#f4f7fb}}article{{background:white;border:1px solid #dce5ef;border-radius:16px;padding:28px}}h1{{font-size:2rem}}.tag{{color:#154ec1;font-weight:700}}.chart{{width:100%;border:1px solid #e3eaf2;border-radius:10px;margin:14px 0}}table{{border-collapse:collapse;width:100%}}th,td{{padding:9px;border-bottom:1px solid #e5ebf2;text-align:left}}.note{{background:#fff4d6;padding:14px;border-radius:9px}}</style><article><a href="../../index.html">← All studies</a><p class="tag">STUDY {study} · PUBLIC DATA</p><h1>{html_escape(STUDIES[study])}</h1><p>{html_escape(status)}</p><div class="note"><b>Not client work.</b> Public-source analysis with stated hypothetical inputs where applicable. Not investment advice.</div><h2>Observed results</h2><table>{rows}</table>{chart_html}<h2>Method</h2><p>{html_escape(method)}</p><h2>Source</h2><p><a href="{source}">{source}</a></p><h2>Limitations</h2><ul>{caveat_html}</ul><h2>Files</h2><ul>{files_html}</ul><p>Built {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')} from local raw inputs under .cache; raw files are excluded from Git.</p></article></html>'''
+    rows = "".join(f"<tr><th>{html_escape(k)}</th><td>{html_escape(v)}</td></tr>" for k, v in flat_rows(summary))
+    rows += "".join(f"</table><h3>{html_escape(name)}</h3><div class='scroll'>{df.to_html(index=False, border=0)}</div><table>" for name, df in record_tables(summary))
+    doc = f'''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>{study} · {html_escape(STUDIES[study])}</title><style>body{{font:16px/1.6 system-ui,sans-serif;max-width:940px;margin:40px auto;padding:0 22px;color:#14243a;background:#f4f7fb}}article{{background:white;border:1px solid #dce5ef;border-radius:16px;padding:28px}}h1{{font-size:2rem}}.tag{{color:#154ec1;font-weight:700}}.chart{{width:100%;border:1px solid #e3eaf2;border-radius:10px;margin:14px 0}}table{{border-collapse:collapse;width:100%}}th,td{{padding:9px;border-bottom:1px solid #e5ebf2;text-align:left}}.note{{background:#fff4d6;padding:14px;border-radius:9px}}.scroll{{overflow-x:auto}}td{{font-variant-numeric:tabular-nums}}@media(max-width:600px){{body{{margin:16px auto;padding:0 16px}}article{{padding:18px}}}}</style><article><a href="../../index.html">← All studies</a><p class="tag">STUDY {study} · PUBLIC DATA</p><h1>{html_escape(STUDIES[study])}</h1><p>{html_escape(status)}</p><div class="note"><b>Not client work.</b> Public-source analysis with stated hypothetical inputs where applicable. Not investment advice.</div><h2>Observed results</h2><table>{rows}</table>{chart_html}<h2>Method</h2><p>{html_escape(method)}</p><h2>Source</h2><p><a href="{source}">{source}</a></p><h2>Limitations</h2><ul>{caveat_html}</ul><h2>Files</h2><ul>{files_html}</ul><p>Built {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')} from local raw inputs under .cache; raw files are excluded from Git.</p></article></html>'''
     (folder / "index.html").write_text(doc)
-    md = f"""# {study} · {STUDIES[study]}\n\n**Status:** {status}\n\n**Summary:** {json.dumps(summary, indent=2, ensure_ascii=False, default=str)}\n\n**Method:** {method}\n\n**Source:** {source}\n\n**Limitations:**\n""" + "".join(f"- {c}\n" for c in caveats)
+    table = "| Measure | Value |\n|---|---|\n" + "".join(f"| {k} | {v} |\n" for k, v in flat_rows(summary))
+    for name, df in record_tables(summary):
+        table += f"\n**{name}**\n\n| " + " | ".join(df.columns) + " |\n|" + "---|" * len(df.columns) + "\n"
+        table += "".join("| " + " | ".join(map(str, r)) + " |\n" for r in df.itertuples(index=False))
+    md = f"""## Method\n\n{status} {method}\n\n## Results\n\n{table}\n## Source\n\n{source}\n\n## Limitations\n\n""" + "".join(f"- {c}\n" for c in caveats)
     (folder / "METHODOLOGY.md").write_text(md)
 
 
@@ -272,7 +351,8 @@ def build_all():
     strategy = s.reset_index()[["date", "slope_10y_2y", "slope_z_252", "next5_slope_change_bp"]]
     path3 = save_csv("03", "signal_test_observations.csv", strategy)
     metrics3 = {"train_observations": int(len(train)), "test_observations": int(len(test)), "train_through": str(train.index.max().date()), "test_from": str(test.index.min().date()), "oos_mae_bp": mae, "mean_baseline_mae_bp": base_mae, "oos_direction_hit_pct": float((np.sign(pred)==np.sign(test["next5_slope_change_bp"])).mean()*100), "interpretation": "forecast diagnostic only; not a tradable strategy or realized return"}
-    write_study("03", "Completed time-ordered test of a curve-state research signal against a mean baseline.", metrics3, "Train a one-variable linear diagnostic on 2020–2023 rolling-standardized 10y–2y slope; evaluate five-session forward slope change on 2024–latest. Compare mean absolute error and direction hit rate to a training-mean baseline.", TREASURY_URL, ["The target is a yield-curve change, not instrument P&L.", "No transaction costs, execution, risk-adjusted return or tradability claim.", "No hyperparameter search was performed."], [str(path3)], None)
+    plot_lines("03", "Signal input: rolling z-score of the 10y–2y slope (train to 2023, test from 2024)", strategy, [("slope_z_252", "Slope z-score (252 sessions)")], "z-score", "signal.png")
+    write_study("03", "Completed time-ordered test of a curve-state research signal against a mean baseline.", metrics3, "Train a one-variable linear diagnostic on 2020–2023 rolling-standardized 10y–2y slope; evaluate five-session forward slope change on 2024–latest. Compare mean absolute error and direction hit rate to a training-mean baseline.", TREASURY_URL, ["The target is a yield-curve change, not instrument P&L.", "No transaction costs, execution, risk-adjusted return or tradability claim.", "No hyperparameter search was performed."], [str(path3)], "signal.png")
 
     # Hypothetical bond duration-only return series from observed yield changes.
     tenors = ["2YEAR", "5YEAR", "10YEAR", "30YEAR"]
@@ -340,7 +420,9 @@ def build_all():
     market_orders=exe[exe["OrderType"].astype(str).str.upper().isin(["M","MARKET"])].copy()
     exec_summary=market_orders.groupby(["month","Sp500"],dropna=False).agg(category_rows=("OrderSize","count"),median_effective_spread_reported=("AvgEffctvSprdPct","median"),median_quoted_spread_reported=("AvgPctQuotSprd","median"),median_weighted_price_improvement_reported=("WghtdAvgPctPI","median"),median_execution_time_reported=("WghtdAvgExctnTime","median"),median_fill_at_quote_or_better=("PctExctdAtQuotOrBetter","median")).reset_index()
     p7s=save_csv("07","monthly_bucket_medians.csv",exec_summary)
-    write_study("07", "Completed analysis of Cboe BZX Rule 605 summary reports for September and October 2026.", {"report_months":sorted(exe.month.unique().tolist()),"report_bucket_rows":int(len(exe)),"market_order_rows":int(len(market_orders)),"groups":exec_summary.to_dict(orient="records")}, "Compare medians of reported statistics across size and S&P500 classification buckets for market orders. Only grouped medians are published; source rows are not redistributed.", CBOE_URL, ["Cboe states the data are unaudited and may contain errors.", "Two monthly observations are descriptive and not a trend or causal comparison.", "Summary buckets are not order-level client fills and cannot replace a client's best-execution review."], [str(p7s)],None)
+    sp_label = lambda v: "S&P 500" if str(v).strip().upper() in {"Y", "1", "TRUE", "S&P500", "YES"} else "Other"
+    plot_bars("07", "Median reported effective spread, market orders (%)", [f"{m[:4]}-{m[4:]} · {sp_label(v)}" for m, v in zip(exec_summary.month, exec_summary.Sp500)], exec_summary.median_effective_spread_reported.astype(float).tolist(), "Effective spread (%)", "spreads.png", annotate="{:.3f}")
+    write_study("07", "Completed analysis of Cboe BZX Rule 605 summary reports for September and October 2026.", {"report_months":sorted(exe.month.unique().tolist()),"report_bucket_rows":int(len(exe)),"market_order_rows":int(len(market_orders)),"groups":exec_summary.to_dict(orient="records")}, "Compare medians of reported statistics across size and S&P500 classification buckets for market orders. Only grouped medians are published; source rows are not redistributed.", CBOE_URL, ["Cboe states the data are unaudited and may contain errors.", "Two monthly observations are descriptive and not a trend or causal comparison.", "Summary buckets are not order-level client fills and cannot replace a client's best-execution review."], [str(p7s)],"spreads.png")
 
     # Monthly performance reporting for the same hypothetical proxy book.
     full_month_end = pd.Timestamp.now().normalize().replace(day=1)
@@ -357,7 +439,8 @@ def build_all():
     test_result={"test_period":metrics3["test_from"]+" to "+str(test.index.max().date()),"test_observations":int(len(test)),"model_mae_bp":mae,"baseline_mae_bp":base_mae,"model_rmse_bp":float(np.sqrt(np.mean((test["next5_slope_change_bp"].values-pred)**2))),"baseline_rmse_bp":float(np.sqrt(np.mean((test["next5_slope_change_bp"].values-baseline)**2))),"model_direction_hit_pct":metrics3["oos_direction_hit_pct"],"baseline_direction_hit_pct":float((np.sign(baseline)==np.sign(test["next5_slope_change_bp"])).mean()*100),"slope_coefficient":float(reg.slope),"r_squared_train":float(reg.rvalue**2)}
     valdf=pd.DataFrame({"date":test.index,"observed_next5_slope_change_bp":test.next5_slope_change_bp.values,"model_prediction_bp":pred,"training_mean_baseline_bp":baseline})
     p9=save_csv("09","out_of_sample_validation.csv",valdf)
-    write_study("09", "Completed out-of-sample validation of a simple curve-state forecast, including baseline and error metrics.", test_result, "Freeze a linear model trained through 2023-12-31; validate next-five-session 10y–2y slope change on 2024–latest. Compare out-of-sample errors and direction accuracy to the training-mean baseline.", TREASURY_URL, ["This is an illustrative single-target model validation, not a validation of a client or production model.", "One chronological split and one baseline; results may be unstable across regimes.", "Forecast target is yield-curve slope change, not return or investment performance."], [str(p9)],None)
+    plot_bars("09", "Out-of-sample error: model vs training-mean baseline (bp)", ["Model MAE", "Baseline MAE", "Model RMSE", "Baseline RMSE"], [test_result["model_mae_bp"], test_result["baseline_mae_bp"], test_result["model_rmse_bp"], test_result["baseline_rmse_bp"]], "Basis points", "errors.png", colors=[PALETTE[0], PALETTE[1], PALETTE[0], PALETTE[1]])
+    write_study("09", "Completed out-of-sample validation of a simple curve-state forecast, including baseline and error metrics.", test_result, "Freeze a linear model trained through 2023-12-31; validate next-five-session 10y–2y slope change on 2024–latest. Compare out-of-sample errors and direction accuracy to the training-mean baseline.", TREASURY_URL, ["This is an illustrative single-target model validation, not a validation of a client or production model.", "One chronological split and one baseline; results may be unstable across regimes.", "Forecast target is yield-curve slope change, not return or investment performance."], [str(p9)],"errors.png")
 
     # Black-Scholes-Merton with Treasury 3-month yield; all other terms are fictional.
     from scipy.stats import norm
@@ -375,7 +458,8 @@ def build_all():
         price=S*math.exp(-q*T)*norm.cdf(dd1)-K*math.exp(-rr*T)*norm.cdf(dd2)
         rate_scen.append({"risk_free_rate_shock_bp":shock_bp,"model_price":float(price)})
     p10s=save_csv("10","rate_sensitivity.csv",pd.DataFrame(rate_scen))
-    write_study("10", "Completed Black–Scholes–Merton scenario using the observed Treasury 3-month par rate and explicitly hypothetical option terms.", option, "Use latest available 3-month Treasury par yield as risk-free rate; calculate European call price and Greeks for a hypothetical at-the-money contract. Reprice over ±100bp rate shocks.", TREASURY_URL, ["Spot, strike, maturity, volatility and dividend yield are illustrative assumptions, not market quotes.", "European exercise only; no bid/ask, discrete dividends, borrow, funding basis or transaction costs.", "Not an executable valuation or recommendation."], [str(p10),str(p10s)],None)
+    plot_bars("10", "Hypothetical call value under risk-free rate shocks", [f"{x['risk_free_rate_shock_bp']:+d} bp" for x in rate_scen], [x["model_price"] for x in rate_scen], "Model value", "rate_sensitivity.png", colors=[PALETTE[0]] * len(rate_scen))
+    write_study("10", "Completed Black–Scholes–Merton scenario using the observed Treasury 3-month par rate and explicitly hypothetical option terms.", option, "Use latest available 3-month Treasury par yield as risk-free rate; calculate European call price and Greeks for a hypothetical at-the-money contract. Reprice over ±100bp rate shocks.", TREASURY_URL, ["Spot, strike, maturity, volatility and dividend yield are illustrative assumptions, not market quotes.", "European exercise only; no bid/ask, discrete dividends, borrow, funding basis or transaction costs.", "Not an executable valuation or recommendation."], [str(p10),str(p10s)],"rate_sensitivity.png")
 
     # Data platform checks and lineage across the three public datasets.
     cftc_raw=json.loads((CACHE/"cftc-tff-selected.json").read_text())
@@ -385,7 +469,8 @@ def build_all():
     qc.append({"source":"CFTC TFF API","rows":len(cftc_raw),"key_duplicates":int(cot.duplicated(["contract_market_name","date"]).sum()),"date_min":str(cot.date.min().date()),"date_max":str(cot.date.max().date()),"missing_open_interest_pct":float(cot.open_interest_all.isna().mean()*100)})
     p11=save_csv("11","source_quality_and_lineage.csv",pd.DataFrame(qc))
     lineage={"source_endpoints":[TREASURY_URL,SEC_URL,CFTC_URL,CBOE_URL],"raw_file_policy":"raw downloads stay local in .cache and are git-ignored","derived_output_count":12,"checks":qc}
-    write_study("11", "Completed ingestion, lineage and quality checks across Treasury, SEC and CFTC inputs.", lineage, "Record source endpoints, local retrieval files, date coverage, key duplication and missingness checks before generating the analytical studies.", SEC_URL, ["This run is a local research pipeline, not a production data platform SLA.", "Source systems may revise or extend observations; rerun to refresh.", "Raw source extracts are excluded from the public Git repository."], [str(p11)],None)
+    plot_bars("11", "Rows ingested and checked per public source", [q["source"] for q in qc], [q["rows"] for q in qc], "Rows", "sources.png", annotate="{:,.0f}")
+    write_study("11", "Completed ingestion, lineage and quality checks across Treasury, SEC and CFTC inputs.", lineage, "Record source endpoints, local retrieval files, date coverage, key duplication and missingness checks before generating the analytical studies.", SEC_URL, ["This run is a local research pipeline, not a production data platform SLA.", "Source systems may revise or extend observations; rerun to refresh.", "Raw source extracts are excluded from the public Git repository."], [str(p11)],"sources.png")
 
     # Evidence-first summary without an external LLM: source facts plus explicit citations.
     latest_rows=companies.sort_values("fiscal_year").groupby("ticker").tail(1)
@@ -399,7 +484,8 @@ def build_all():
     p12=save_csv("12","evidence_ledger.csv",ledger)
     brief={"purpose":"Demonstrate deterministic evidence-linked public-market research; no LLM was used.","records":evidence,"review_controls":["source URL retained per issuer","fiscal year and filed date retained","do not infer causality from reported fundamentals","human review required before client use"]}
     save_json("12","evidence_brief.json",brief)
-    write_study("12", "Completed deterministic, source-linked research demonstrator using official SEC annual facts; no AI-generated claim is presented as verified fact.", {"evidence_rows":len(evidence),"issuer_coverage":sorted(latest_rows.ticker.tolist()),"method":"XBRL extraction, filed-date preservation, calculations, evidence ledger; no LLM generation"}, "Generate a concise issuer evidence ledger from extracted annual SEC facts, retaining ticker, fiscal year, filed date and source endpoint. AI is not called; the demonstrator verifies the no-AI manual fallback and citation structure.", SEC_URL, ["This demonstrates the evidence workflow; it is not independent investment research or advice.", "No external model or AI API was used.", "Statements are limited to the fields and periods explicitly recorded."], [str(p12),"evidence_brief.json"],None)
+    plot_bars("12", "Evidence ledger: latest reported annual revenue (USD bn, SEC 10-K facts)", [f"{e['ticker']} FY{e['fiscal_year']}" for e in evidence], [(e["revenue_usd"] or 0) / 1e9 for e in evidence], "USD billions", "evidence.png", annotate="{:,.1f}")
+    write_study("12", "Completed deterministic, source-linked research demonstrator using official SEC annual facts; no AI-generated claim is presented as verified fact.", {"evidence_rows":len(evidence),"issuer_coverage":sorted(latest_rows.ticker.tolist()),"method":"XBRL extraction, filed-date preservation, calculations, evidence ledger; no LLM generation"}, "Generate a concise issuer evidence ledger from extracted annual SEC facts, retaining ticker, fiscal year, filed date and source endpoint. AI is not called; the demonstrator verifies the no-AI manual fallback and citation structure.", SEC_URL, ["This demonstrates the evidence workflow; it is not independent investment research or advice.", "No external model or AI API was used.", "Statements are limited to the fields and periods explicitly recorded."], [str(p12),"evidence_brief.json"],"evidence.png")
 
     # Create a single workbook with a concise results sheet plus study data tabs.
     xlsx=OUT/"ProQuant_Public_Studies.xlsx"

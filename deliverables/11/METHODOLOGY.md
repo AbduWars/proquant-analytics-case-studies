@@ -1,49 +1,29 @@
-# 11 · Market Data Platform & Reconciliation
+## Method
 
-**Status:** Completed ingestion, lineage and quality checks across Treasury, SEC and CFTC inputs.
+Completed ingestion, lineage and quality checks across Treasury, SEC and CFTC inputs. Record source endpoints, local retrieval files, date coverage, key duplication and missingness checks before generating the analytical studies.
 
-**Summary:** {
-  "source_endpoints": [
-    "https://home.treasury.gov/treasury-daily-interest-rate-xml-feed",
-    "https://www.sec.gov/edgar/sec-api-documentation",
-    "https://publicreporting.cftc.gov/Commitments-of-Traders/TFF-Futures-Only/gpe5-46if",
-    "https://www.cboe.com/markets/us/equities/regulation/605/bzx"
-  ],
-  "raw_file_policy": "raw downloads stay local in .cache and are git-ignored",
-  "derived_output_count": 12,
-  "checks": [
-    {
-      "source": "U.S. Treasury",
-      "rows": 1720,
-      "key_duplicates": 0,
-      "date_min": "2020-01-02",
-      "date_max": "2026-11-17",
-      "missing_10y_pct": 0.0
-    },
-    {
-      "source": "SEC Company Facts",
-      "rows": 21,
-      "key_duplicates": 0,
-      "date_min": "2020",
-      "date_max": "2026",
-      "missing_revenue_pct": 0.0
-    },
-    {
-      "source": "CFTC TFF API",
-      "rows": 47420,
-      "key_duplicates": 0,
-      "date_min": "2006-06-13",
-      "date_max": "2026-11-10",
-      "missing_open_interest_pct": 0.0
-    }
-  ]
-}
+## Results
 
-**Method:** Record source endpoints, local retrieval files, date coverage, key duplication and missingness checks before generating the analytical studies.
+| Measure | Value |
+|---|---|
+| Source endpoints | https://home.treasury.gov/treasury-daily-interest-rate-xml-feed, https://www.sec.gov/edgar/sec-api-documentation, https://publicreporting.cftc.gov/Commitments-of-Traders/TFF-Futures-Only/gpe5-46if, https://www.cboe.com/markets/us/equities/regulation/605/bzx |
+| Raw file policy | raw downloads stay local in .cache and are git-ignored |
+| Derived output count | 12 |
 
-**Source:** https://www.sec.gov/edgar/sec-api-documentation
+**Checks**
 
-**Limitations:**
+| Source | Rows | Key duplicates | Date min | Date max | Missing 10y (%) | Missing revenue (%) | Missing open interest (%) |
+|---|---|---|---|---|---|---|---|
+| U.S. Treasury | 1,720 | 0 | 2020-01-02 | 2026-11-17 | 0.00 | n/a | n/a |
+| SEC Company Facts | 21 | 0 | 2020 | 2026 | n/a | 0.00 | n/a |
+| CFTC TFF API | 47,420 | 0 | 2006-06-13 | 2026-11-10 | n/a | n/a | 0.00 |
+
+## Source
+
+https://www.sec.gov/edgar/sec-api-documentation
+
+## Limitations
+
 - This run is a local research pipeline, not a production data platform SLA.
 - Source systems may revise or extend observations; rerun to refresh.
 - Raw source extracts are excluded from the public Git repository.

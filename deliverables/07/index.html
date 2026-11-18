@@ -1,1 +1,56 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>07 · Execution Costs &amp; Slippage</title><style>body{font:16px/1.6 system-ui,sans-serif;max-width:940px;margin:40px auto;padding:0 22px;color:#14243a;background:#f4f7fb}article{background:white;border:1px solid #dce5ef;border-radius:16px;padding:28px}h1{font-size:2rem}.tag{color:#154ec1;font-weight:700}.chart{width:100%;border:1px solid #e3eaf2;border-radius:10px;margin:14px 0}table{border-collapse:collapse;width:100%}th,td{padding:9px;border-bottom:1px solid #e5ebf2;text-align:left}.note{background:#fff4d6;padding:14px;border-radius:9px}</style><article><a href="../../index.html">← All studies</a><p class="tag">STUDY 07 · PUBLIC DATA</p><h1>Execution Costs &amp; Slippage</h1><p>Completed analysis of Cboe BZX Rule 605 summary reports for September and October 2026.</p><div class="note"><b>Not client work.</b> Public-source analysis with stated hypothetical inputs where applicable. Not investment advice.</div><h2>Observed results</h2><table><tr><th>report bucket rows</th><td>72</td></tr><tr><th>market order rows</th><td>36</td></tr></table><h2>Method</h2><p>Compare medians of reported statistics across size and S&amp;P500 classification buckets for market orders. Only grouped medians are published; source rows are not redistributed.</p><h2>Source</h2><p><a href="https://www.cboe.com/markets/us/equities/regulation/605/bzx">https://www.cboe.com/markets/us/equities/regulation/605/bzx</a></p><h2>Limitations</h2><ul><li>Cboe states the data are unaudited and may contain errors.</li><li>Two monthly observations are descriptive and not a trend or causal comparison.</li><li>Summary buckets are not order-level client fills and cannot replace a client's best-execution review.</li></ul><h2>Files</h2><ul><li><a href="monthly_bucket_medians.csv">monthly_bucket_medians.csv</a></li></ul><p>Built 2026-11-18 10:08 UTC from local raw inputs under .cache; raw files are excluded from Git.</p></article></html>
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>07 · Execution Costs &amp; Slippage</title><style>body{font:16px/1.6 system-ui,sans-serif;max-width:940px;margin:40px auto;padding:0 22px;color:#14243a;background:#f4f7fb}article{background:white;border:1px solid #dce5ef;border-radius:16px;padding:28px}h1{font-size:2rem}.tag{color:#154ec1;font-weight:700}.chart{width:100%;border:1px solid #e3eaf2;border-radius:10px;margin:14px 0}table{border-collapse:collapse;width:100%}th,td{padding:9px;border-bottom:1px solid #e5ebf2;text-align:left}.note{background:#fff4d6;padding:14px;border-radius:9px}.scroll{overflow-x:auto}td{font-variant-numeric:tabular-nums}@media(max-width:600px){body{margin:16px auto;padding:0 16px}article{padding:18px}}</style><article><a href="../../index.html">← All studies</a><p class="tag">STUDY 07 · PUBLIC DATA</p><h1>Execution Costs &amp; Slippage</h1><p>Completed analysis of Cboe BZX Rule 605 summary reports for September and October 2026.</p><div class="note"><b>Not client work.</b> Public-source analysis with stated hypothetical inputs where applicable. Not investment advice.</div><h2>Observed results</h2><table><tr><th>Report months</th><td>202609, 202610</td></tr><tr><th>Report bucket rows</th><td>72</td></tr><tr><th>Market order rows</th><td>36</td></tr></table><h3>Groups</h3><div class='scroll'><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Month</th>
+      <th>Sp500</th>
+      <th>Category rows</th>
+      <th>Median effective spread reported</th>
+      <th>Median quoted spread reported</th>
+      <th>Median weighted price improvement reported</th>
+      <th>Median execution time reported</th>
+      <th>Median fill at quote or better</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>202609</td>
+      <td>N</td>
+      <td>9</td>
+      <td>0.01</td>
+      <td>0.0069</td>
+      <td>0.0014</td>
+      <td>4,674</td>
+      <td>0.68</td>
+    </tr>
+    <tr>
+      <td>202609</td>
+      <td>Y</td>
+      <td>9</td>
+      <td>0.0049</td>
+      <td>0.0083</td>
+      <td>0.0025</td>
+      <td>5.36</td>
+      <td>0.62</td>
+    </tr>
+    <tr>
+      <td>202610</td>
+      <td>N</td>
+      <td>9</td>
+      <td>0.0033</td>
+      <td>0.0041</td>
+      <td>0.0007</td>
+      <td>1,734</td>
+      <td>0.76</td>
+    </tr>
+    <tr>
+      <td>202610</td>
+      <td>Y</td>
+      <td>9</td>
+      <td>-0.0004</td>
+      <td>0.0057</td>
+      <td>0.0019</td>
+      <td>4.93</td>
+      <td>0.83</td>
+    </tr>
+  </tbody>
+</table></div><table></table><img class="chart" src="spreads.png" alt="Study chart"><h2>Method</h2><p>Compare medians of reported statistics across size and S&amp;P500 classification buckets for market orders. Only grouped medians are published; source rows are not redistributed.</p><h2>Source</h2><p><a href="https://www.cboe.com/markets/us/equities/regulation/605/bzx">https://www.cboe.com/markets/us/equities/regulation/605/bzx</a></p><h2>Limitations</h2><ul><li>Cboe states the data are unaudited and may contain errors.</li><li>Two monthly observations are descriptive and not a trend or causal comparison.</li><li>Summary buckets are not order-level client fills and cannot replace a client's best-execution review.</li></ul><h2>Files</h2><ul><li><a href="monthly_bucket_medians.csv">monthly_bucket_medians.csv</a></li></ul><p>Built 2026-11-18 12:12 UTC from local raw inputs under .cache; raw files are excluded from Git.</p></article></html>

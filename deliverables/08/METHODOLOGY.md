@@ -1,22 +1,25 @@
-# 08 · Performance & Investor Reporting
+## Method
 
-**Status:** Completed monthly reporting demonstrator for a hypothetical duration-only portfolio driven by real Treasury yield changes.
+Completed monthly reporting demonstrator for a hypothetical duration-only portfolio driven by real Treasury yield changes. Compound daily first-order duration proxy returns to monthly figures, calculate cumulative growth and drawdown, and provide a reproducible monthly table.
 
-**Summary:** {
-  "months": 82,
-  "start_month": "2020-01-31",
-  "end_month": "2026-10-31",
-  "cumulative_proxy_return_pct": -30.685929952214497,
-  "best_month_pct": 5.638188494427121,
-  "worst_month_pct": -6.786107982067213,
-  "ending_growth_of_1": 0.693140700477855
-}
+## Results
 
-**Method:** Compound daily first-order duration proxy returns to monthly figures, calculate cumulative growth and drawdown, and provide a reproducible monthly table.
+| Measure | Value |
+|---|---|
+| Months | 82 |
+| Start month | 2020-01-31 |
+| End month | 2026-10-31 |
+| Cumulative proxy return (%) | -30.69 |
+| Best month (%) | 5.64 |
+| Worst month (%) | -6.79 |
+| Ending growth of 1 | 0.69 |
 
-**Source:** https://home.treasury.gov/treasury-daily-interest-rate-xml-feed
+## Source
 
-**Limitations:**
+https://home.treasury.gov/treasury-daily-interest-rate-xml-feed
+
+## Limitations
+
 - This is not a real fund, client account or administrator-reconciled NAV series.
 - Hypothetical position weights and duration-only return assumptions; no fees or flows.
 - The pack illustrates reporting mechanics only.

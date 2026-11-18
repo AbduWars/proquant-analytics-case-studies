@@ -1,1 +1,46 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>11 · Market Data Platform &amp; Reconciliation</title><style>body{font:16px/1.6 system-ui,sans-serif;max-width:940px;margin:40px auto;padding:0 22px;color:#14243a;background:#f4f7fb}article{background:white;border:1px solid #dce5ef;border-radius:16px;padding:28px}h1{font-size:2rem}.tag{color:#154ec1;font-weight:700}.chart{width:100%;border:1px solid #e3eaf2;border-radius:10px;margin:14px 0}table{border-collapse:collapse;width:100%}th,td{padding:9px;border-bottom:1px solid #e5ebf2;text-align:left}.note{background:#fff4d6;padding:14px;border-radius:9px}</style><article><a href="../../index.html">← All studies</a><p class="tag">STUDY 11 · PUBLIC DATA</p><h1>Market Data Platform &amp; Reconciliation</h1><p>Completed ingestion, lineage and quality checks across Treasury, SEC and CFTC inputs.</p><div class="note"><b>Not client work.</b> Public-source analysis with stated hypothetical inputs where applicable. Not investment advice.</div><h2>Observed results</h2><table><tr><th>raw file policy</th><td>raw downloads stay local in .cache and are git-ignored</td></tr><tr><th>derived output count</th><td>12</td></tr></table><h2>Method</h2><p>Record source endpoints, local retrieval files, date coverage, key duplication and missingness checks before generating the analytical studies.</p><h2>Source</h2><p><a href="https://www.sec.gov/edgar/sec-api-documentation">https://www.sec.gov/edgar/sec-api-documentation</a></p><h2>Limitations</h2><ul><li>This run is a local research pipeline, not a production data platform SLA.</li><li>Source systems may revise or extend observations; rerun to refresh.</li><li>Raw source extracts are excluded from the public Git repository.</li></ul><h2>Files</h2><ul><li><a href="source_quality_and_lineage.csv">source_quality_and_lineage.csv</a></li></ul><p>Built 2026-11-18 10:08 UTC from local raw inputs under .cache; raw files are excluded from Git.</p></article></html>
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>11 · Market Data Platform &amp; Reconciliation</title><style>body{font:16px/1.6 system-ui,sans-serif;max-width:940px;margin:40px auto;padding:0 22px;color:#14243a;background:#f4f7fb}article{background:white;border:1px solid #dce5ef;border-radius:16px;padding:28px}h1{font-size:2rem}.tag{color:#154ec1;font-weight:700}.chart{width:100%;border:1px solid #e3eaf2;border-radius:10px;margin:14px 0}table{border-collapse:collapse;width:100%}th,td{padding:9px;border-bottom:1px solid #e5ebf2;text-align:left}.note{background:#fff4d6;padding:14px;border-radius:9px}.scroll{overflow-x:auto}td{font-variant-numeric:tabular-nums}@media(max-width:600px){body{margin:16px auto;padding:0 16px}article{padding:18px}}</style><article><a href="../../index.html">← All studies</a><p class="tag">STUDY 11 · PUBLIC DATA</p><h1>Market Data Platform &amp; Reconciliation</h1><p>Completed ingestion, lineage and quality checks across Treasury, SEC and CFTC inputs.</p><div class="note"><b>Not client work.</b> Public-source analysis with stated hypothetical inputs where applicable. Not investment advice.</div><h2>Observed results</h2><table><tr><th>Source endpoints</th><td>https://home.treasury.gov/treasury-daily-interest-rate-xml-feed, https://www.sec.gov/edgar/sec-api-documentation, https://publicreporting.cftc.gov/Commitments-of-Traders/TFF-Futures-Only/gpe5-46if, https://www.cboe.com/markets/us/equities/regulation/605/bzx</td></tr><tr><th>Raw file policy</th><td>raw downloads stay local in .cache and are git-ignored</td></tr><tr><th>Derived output count</th><td>12</td></tr></table><h3>Checks</h3><div class='scroll'><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Source</th>
+      <th>Rows</th>
+      <th>Key duplicates</th>
+      <th>Date min</th>
+      <th>Date max</th>
+      <th>Missing 10y (%)</th>
+      <th>Missing revenue (%)</th>
+      <th>Missing open interest (%)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>U.S. Treasury</td>
+      <td>1,720</td>
+      <td>0</td>
+      <td>2020-01-02</td>
+      <td>2026-11-17</td>
+      <td>0.00</td>
+      <td>n/a</td>
+      <td>n/a</td>
+    </tr>
+    <tr>
+      <td>SEC Company Facts</td>
+      <td>21</td>
+      <td>0</td>
+      <td>2020</td>
+      <td>2026</td>
+      <td>n/a</td>
+      <td>0.00</td>
+      <td>n/a</td>
+    </tr>
+    <tr>
+      <td>CFTC TFF API</td>
+      <td>47,420</td>
+      <td>0</td>
+      <td>2006-06-13</td>
+      <td>2026-11-10</td>
+      <td>n/a</td>
+      <td>n/a</td>
+      <td>0.00</td>
+    </tr>
+  </tbody>
+</table></div><table></table><img class="chart" src="sources.png" alt="Study chart"><h2>Method</h2><p>Record source endpoints, local retrieval files, date coverage, key duplication and missingness checks before generating the analytical studies.</p><h2>Source</h2><p><a href="https://www.sec.gov/edgar/sec-api-documentation">https://www.sec.gov/edgar/sec-api-documentation</a></p><h2>Limitations</h2><ul><li>This run is a local research pipeline, not a production data platform SLA.</li><li>Source systems may revise or extend observations; rerun to refresh.</li><li>Raw source extracts are excluded from the public Git repository.</li></ul><h2>Files</h2><ul><li><a href="source_quality_and_lineage.csv">source_quality_and_lineage.csv</a></li></ul><p>Built 2026-11-18 12:12 UTC from local raw inputs under .cache; raw files are excluded from Git.</p></article></html>
